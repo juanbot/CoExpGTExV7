@@ -15,9 +15,9 @@ initDb = function(mandatory=F){
     CoExpNets::addNet(which.one="CoExpGTExV7",
            tissue=net,
            netfile=CoExpGTExV7::getGTExNet(net),
-           ctfile=paste0(getGTExNet(net),"_celltype.tsv"),
-           gofile=paste0(getGTExNet(net),"_gprof.tsv"),
-           exprdatafile=paste0(the.dir,"/",tissue,".rds"),
+           ctfile=paste0(the.dir,"/",net,"_celltype.tsv"),
+           gofile=paste0(the.dir,"/",net,"_gprof.tsv"),
+           exprdatafile=paste0(the.dir,"/",net,".rds"),
            overwrite=mandatory)
   }
 }
@@ -59,5 +59,22 @@ getGTExTissues = function(){
   net.files = gsub(".\\d+\\.it\\.50\\.rds$","",net.files)
 
   return(net.files)
+}
+
+testNetworks = function(){
+  tissues = CoExpGTExV7::getGTExTissues()
+  for(tissue in tissues){
+    file = CoExpNets::getNetworkFromTissue(tissue=tissue,which.one="CoExpGTExV7",only.file = T)
+    stopifnot(file.exists(file))
+    cat("Network for",tissue,"has",length(readRDS(file)$moduleColors),"genes\n")
+    file = CoExpNets::getExprDataFromTissue(tissue=tissue,which.one="CoExpGTExV7",only.file = T)
+    stopifnot(file.exists(file))
+    cat("Network for",tissue,"has",nrow(readRDS(file)),
+        "samples\n")
+    cat("Network for",tissue,"has",nrow(( CoExpNets::getGOFromTissue(tissue=tissue,which.one="CoExpGTExV7"))),
+        "annotation signals\n")
+    
+    
+  }
 }
 
