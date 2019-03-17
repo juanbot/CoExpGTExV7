@@ -71,10 +71,15 @@ testNetworks = function(){
     stopifnot(file.exists(file))
     cat("Network for",tissue,"has",nrow(readRDS(file)),
         "samples\n")
-    cat("Network for",tissue,"has",nrow(( CoExpNets::getGOFromTissue(tissue=tissue,which.one="CoExpGTExV7"))),
+    go =  CoExpNets::findGO(tissue=tissue,which.one="CoExpGTExV7")
+    stopifnot(file.exists(go))
+    cat("Network for",tissue,"has",nrow(read.delim(go)),
         "annotation signals\n")
-    
-    
+    ct =  CoExpNets::findCT(tissue=tissue,which.one="CoExpGTExV7")
+    stopifnot(file.exists(ct))
+    cat("Network for",tissue,"has",nrow(read.delim(ct)),
+        "cell type annotation signals\n")
   }
+  cat("Test OK!!\n")
 }
 
