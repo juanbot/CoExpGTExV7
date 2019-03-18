@@ -61,6 +61,23 @@ getGTExTissues = function(){
   return(net.files)
 }
 
+repareGeneNames = function(){
+  tissues = CoExpGTExV7::getGTExTissues()
+  for(tissue in tissues){
+    file = CoExpNets::getNetworkFromTissue(tissue=tissue,which.one="CoExpGTExV7",only.file = T)
+    cat("Reading network for",tissue,"from", file,"\n")
+    net = readRDS(file)
+    oldnames = names(net$moduleColors)
+    names(net$moduleColors) = unlist(lapply(stringr::str_split(names(net$moduleColors),"\\."),function(x){return(x[[1]])}))
+    if(!identical(oldnames,names(net$moduleColors))){
+      saveRDS(net,file)
+      cat("Writting down network",tissue)
+    }
+      
+  }
+}
+
+
 testNetworks = function(){
   tissues = CoExpGTExV7::getGTExTissues()
   for(tissue in tissues){
