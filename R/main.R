@@ -65,6 +65,7 @@ repareGeneNames = function(){
   tissues = CoExpGTExV7::getGTExTissues()
   for(tissue in tissues){
     file = CoExpNets::getNetworkFromTissue(tissue=tissue,which.one="CoExpGTExV7",only.file = T)
+    file = paste0("~/Dropbox/KCL/workspace/CoExpGTExV7/inst/gtexv7/",basename(file))
     cat("Reading network for",tissue,"from", file,"\n")
     net = readRDS(file)
     oldnames = names(net$moduleColors)
@@ -73,6 +74,18 @@ repareGeneNames = function(){
       saveRDS(net,file)
       cat("Writting down network",tissue)
     }
+    
+    file = CoExpNets::getExprDataFromTissue(tissue=tissue,which.one="CoExpGTExV7",only.file = T)
+    file = paste0("~/Dropbox/KCL/workspace/CoExpGTExV7/inst/gtexv7/",basename(file))
+    cat("Reading expr data for",tissue,"from", file,"\n")
+    expr.data = readRDS(file)
+    oldnames = colnames(expr.data)
+    colnames(expr.data) = unlist(lapply(stringr::str_split(colnames(expr.data),"\\."),function(x){return(x[[1]])}))
+    if(!identical(oldnames,colnames(expr.data))){
+      saveRDS(expr.data,file)
+      cat("Writting down expression for ",tissue,"\n")
+    }
+    
       
   }
 }
